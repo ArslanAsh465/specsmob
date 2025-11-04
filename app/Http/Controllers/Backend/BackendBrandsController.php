@@ -6,16 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Brand;
+use App\Models\User;
 
 class BackendBrandsController extends Controller
 {
     protected $data = [];
     
-    public function index()
+    public function index(Request $request)
     {
         $this->data['title'] = 'Brands';
 
-        $this->data['brands'] = Brand::with('user', 'mobiles')->get();
+        // Filter Data
+        $this->data['users'] = User::whereHas('brands')->get();
+
+        $query = Brand::with(['user', 'mobiles']);
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $this->data['brands'] = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
 
         return view('backend.brands.index', $this->data);
     }
@@ -71,6 +85,14 @@ class BackendBrandsController extends Controller
             'name' => 'required|string|unique:brands,name,' . $brand->id,
             'status' => 'required|in:0,1',
         ]);
+
+        $status = $request->status;
+
+        if ($brand->mobiles()->exists() && $status == 0) {
+            return redirect()->back()
+                ->with('alert_type', 'danger')
+                ->with('alert_message', 'This brand has associated mobiles and cannot be marked as inactive.');
+        }
 
         $brand->update([
             'name' => $request->name,

@@ -12,6 +12,10 @@ use App\Models\User;
 use App\Models\Brand;
 use App\Models\Mobile;
 use App\Models\MobileComment;
+use App\Models\News;
+use App\Models\NewsComment;
+use App\Models\Review;
+use App\Models\ReviewComment;
 
 class TestSeeder extends Seeder
 {
@@ -58,7 +62,7 @@ class TestSeeder extends Seeder
 
         $faker = Faker::create();
 
-        // Create Random Users
+        // Create Users
         for ($i = 0; $i < 30; $i++) {
             User::create([
                 'name'              => $faker->name,
@@ -109,9 +113,10 @@ class TestSeeder extends Seeder
             ]);
         }
 
-        // Create Random Mobiles
+        // Create Mobiles
         $users = User::whereIn('role', [User::ROLE_ADMIN, User::ROLE_MANAGER])->pluck('id')->toArray();
-        $brands = Brand::pluck('id')->toArray();
+        $brands = Brand::where('status', 1)->pluck('id')->toArray();
+        $colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FFA500', '#800080', '#00FFFF', '#FFC0CB', '#A52A2A', '#808080'];
 
         for ($i = 0; $i < 30; $i++) {
             $name = $faker->word . ' ' . $faker->bothify('##??');
@@ -121,7 +126,9 @@ class TestSeeder extends Seeder
                 'brand_id'              => $faker->randomElement($brands),
                 'name'                  => $name,
                 'slug'                  => Str::slug($name),
-                'versions'              => $faker->sentence(3),
+
+                // Versions
+                'versions'   => $faker->sentence(3),
 
                 // Network
                 'network_technology'    => $faker->randomElement(['GSM / CDMA / HSPA / LTE / 5G']),
@@ -131,11 +138,15 @@ class TestSeeder extends Seeder
                 'network_5g_bands'      => $faker->word,
                 'network_speed'         => $faker->randomElement(['HSPA 42.2/5.76 Mbps', 'LTE-A', '5G']),
 
+                // Launch
+                'launch_date'   => $faker->date('F Y'),
+                'launch_status' => $faker->randomElement(['Available', 'Coming soon', 'Discontinued']),
+
                 // Body
                 'body_dimensions'       => $faker->randomElement(['146.7 x 71.5 x 7.4 mm', '160 x 75 x 8 mm']),
                 'body_weight'           => $faker->randomElement(['174 g', '190 g']),
                 'body_build'            => $faker->word,
-                'body_sim'              => $faker->word,
+                'body_sim'              => $faker->randomElement(['Single SIM', 'Dual SIM']),
 
                 // Display
                 'display_type'          => $faker->randomElement(['Super AMOLED', 'LCD', 'OLED']),
@@ -192,19 +203,16 @@ class TestSeeder extends Seeder
                 'misc_sar_eu_body'      => $faker->randomFloat(2, 0.1, 2),
                 'misc_price'            => $faker->randomFloat(2, 100, 1500),
 
-                'status'                => $faker->boolean,
-                'views'                 => $faker->numberBetween(1000, 50000),
-                'image'                 => null,
-                'description'           => $faker->paragraph,
-
                 // SEO
-                'meta_title'            => $faker->sentence(3),
-                'meta_keywords'         => $faker->words(5, true),
-                'meta_description'      => $faker->sentence(10),
-                'canonical_url'         => $faker->url,
-                'og_title'              => $faker->sentence(3),
-                'og_description'        => $faker->sentence(10),
-                'og_image'              => null,
+                'seo_title'        => $faker->sentence(3),
+                'seo_keywords'     => implode(', ', $faker->words(5)),
+                'seo_description'  => $faker->sentence(10),
+
+                // General
+                'status'                => $faker->boolean,
+                'color'                 => $faker->randomElement($colors),
+                'views'                 => $faker->numberBetween(10000, 99999),
+                'description'           => $faker->paragraph,
 
                 'created_at'            => now(),
                 'updated_at'            => now(),
@@ -212,8 +220,8 @@ class TestSeeder extends Seeder
         }
 
         // Create Mobile Comments
-        $users = User::pluck('id')->toArray();
-        $mobiles = Mobile::pluck('id')->toArray();
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $mobiles = Mobile::where('status', 1)->pluck('id')->toArray();
 
         foreach ($mobiles as $mobileId) {
             // Random number of comments per mobile
@@ -225,6 +233,94 @@ class TestSeeder extends Seeder
                     'user_id'   => $faker->randomElement($users),
                     'comment'   => $faker->sentence(rand(5, 15)),
                     'stars'     => $faker->numberBetween(1, 5),
+                    'status'     => $faker->boolean,
+                    'created_at'=> now(),
+                    'updated_at'=> now(),
+                ]);
+            }
+        }
+
+        // Create News
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $mobiles = Mobile::where('status', 1)->pluck('id')->toArray();
+
+        foreach ($mobiles as $mobileId) {
+            $title = $faker->unique()->sentence(rand(3, 7));
+
+            News::create([
+                'user_id'       => $faker->randomElement($users),
+                'mobile_id'     => $mobileId,
+                'title'         => $title,
+                'slug'          => Str::slug($title),
+                'status'        => $faker->randomElement(['draft', 'published', 'archived']),
+                'body'          => $faker->paragraphs(rand(3, 7), true),
+                'views'         => $faker->numberBetween(0, 5000),
+                'seo_title'     => $faker->sentence(5),
+                'seo_keywords'  => implode(', ', $faker->words(5)),
+                'seo_description' => $faker->sentence(10),
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]);
+        }
+
+        // Create News Comments
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $newsList = News::where('status', 'published')->pluck('id')->toArray();
+
+        foreach ($newsList as $newsId) {
+            $commentsCount = rand(1, 10);
+
+            for ($i = 0; $i < $commentsCount; $i++) {
+                NewsComment::create([
+                    'news_id'   => $newsId,
+                    'user_id'   => $faker->randomElement($users),
+                    'comment'   => $faker->sentence(rand(5, 15)),
+                    'stars'     => $faker->numberBetween(1, 5),
+                    'status'    => $faker->boolean,
+                    'created_at'=> now(),
+                    'updated_at'=> now(),
+                ]);
+            }
+        }
+
+        // Create Reviews
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $mobiles = Mobile::where('status', 1)->pluck('id')->toArray();
+
+        foreach ($mobiles as $mobileId) {
+            $title = $faker->unique()->sentence(rand(3, 7));
+
+            Review::create([
+                'mobile_id'       => $mobileId,
+                'user_id'         => $faker->randomElement($users),
+                'title'           => $title,
+                'slug'            => Str::slug($title),
+                'image'           => null,
+                'status'          => $faker->randomElement(['draft', 'published', 'archived']),
+                'body'            => $faker->paragraphs(rand(3, 7), true),
+                'views'           => $faker->numberBetween(0, 5000),
+                'seo_title'       => $faker->sentence(5),
+                'seo_keywords'    => implode(', ', $faker->words(5)),
+                'seo_description' => $faker->sentence(10),
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ]);
+        }
+
+        // Create Review Comments
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $reviews = Review::where('status', 'published')->pluck('id')->toArray();
+
+        foreach ($reviews as $reviewId) {
+            $commentsCount = rand(1, 10);
+
+            for ($i = 0; $i < $commentsCount; $i++) {
+                ReviewComment::create([
+                    'review_id' => $reviewId,
+                    'user_id'   => $faker->randomElement($users),
+                    'comment'   => $faker->sentence(rand(5, 15)),
+                    'stars'     => $faker->numberBetween(1, 5),
+                    'status'    => $faker->boolean(),
                     'created_at'=> now(),
                     'updated_at'=> now(),
                 ]);

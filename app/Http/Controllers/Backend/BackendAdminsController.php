@@ -12,11 +12,17 @@ class BackendAdminsController extends Controller
 {
     protected $data = [];
     
-    public function index()
+    public function index(Request $request)
     {
         $this->data['title'] = 'Admins';
 
-        $this->data['admins'] = User::where('role', User::ROLE_ADMIN)->get();
+        $query = User::where('role', User::ROLE_ADMIN);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $this->data['admins'] = $query->orderBy('created_at', 'desc')->paginate(20)->appends($request->all());
 
         return view('backend.admins.index', $this->data);
     }

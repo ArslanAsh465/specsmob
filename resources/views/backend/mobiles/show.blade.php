@@ -9,8 +9,12 @@
     <div class="mb-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('backend.dashboard') }}" class="text-decoration-none">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('backend.mobiles.index') }}" class="text-decoration-none">Mobiles</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('backend.dashboard') }}" class="text-decoration-none">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('backend.mobiles.index') }}" class="text-decoration-none">Mobiles</a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">View Mobile</li>
             </ol>
         </nav>
@@ -29,19 +33,24 @@
     </div>
 
     <!-- Mobile Details -->
-    <div class="shadow rounded bg-white p-3 mb-4">
+    <div class="shadow-sm rounded bg-white p-3 mt-4">
         <div class="row g-3">
 
             <!-- General Info -->
             <div class="col-md-6"><strong>Brand:</strong> {{ $mobile->brand->name ?? '-' }}</div>
             <div class="col-md-6"><strong>Slug:</strong> {{ $mobile->slug }}</div>
-            <div class="col-md-6"><strong>Model Number:</strong> {{ $mobile->model_number ?? '-' }}</div>
-            <div class="col-md-6"><strong>Release Date:</strong> {{ $mobile->release_date ?? '-' }}</div>
             <div class="col-md-6"><strong>Status:</strong>
                 @if($mobile->status)
                     <span class="badge bg-success">Active</span>
                 @else
                     <span class="badge bg-danger">Inactive</span>
+                @endif
+            </div>
+            <div class="col-md-6"><strong>Colors:</strong> 
+                @if($mobile->color)
+                    <span class="d-inline-block rounded" style="width: 30px; height: 30px; background-color: {{ $mobile->color }};"></span>
+                @else
+                    -
                 @endif
             </div>
             <div class="col-md-6"><strong>Views:</strong> {{ $mobile->views }}</div>
@@ -103,27 +112,17 @@
             <div class="col-md-6"><strong>SAR US Body:</strong> {{ $mobile->misc_sar_us_body ?? '-' }}</div>
             <div class="col-md-6"><strong>SAR EU Head:</strong> {{ $mobile->misc_sar_eu_head ?? '-' }}</div>
             <div class="col-md-6"><strong>SAR EU Body:</strong> {{ $mobile->misc_sar_eu_body ?? '-' }}</div>
-            <div class="col-md-6"><strong>Price:</strong> {{ $mobile->misc_price ? '$' . number_format($mobile->misc_price, 2) : '-' }}</div>
+            <div class="col-md-6"><strong>Price:</strong> {{ $mobile->misc_price }}</div>
 
             <!-- Description -->
             <div class="col-12"><h5 class="mt-3">Description</h5></div>
-            <div class="col-12">{{ $mobile->description ?? '-' }}</div>
+            <div class="col-12">{!! $mobile->description !!}</div>
 
             <!-- SEO -->
             <div class="col-12"><h5 class="mt-3">SEO</h5></div>
-            <div class="col-md-6"><strong>Meta Title:</strong> {{ $mobile->meta_title ?? '-' }}</div>
-            <div class="col-md-6"><strong>Meta Keywords:</strong> {{ $mobile->meta_keywords ?? '-' }}</div>
-            <div class="col-12"><strong>Meta Description:</strong> {{ $mobile->meta_description ?? '-' }}</div>
-            <div class="col-12"><strong>Canonical URL:</strong> {{ $mobile->canonical_url ?? '-' }}</div>
-            <div class="col-md-6"><strong>OG Title:</strong> {{ $mobile->og_title ?? '-' }}</div>
-            <div class="col-12"><strong>OG Description:</strong> {{ $mobile->og_description ?? '-' }}</div>
-            <div class="col-12"><strong>OG Image:</strong> 
-                @if($mobile->og_image)
-                    <img src="{{ asset($mobile->og_image) }}" alt="OG Image" class="img-fluid mt-1" style="max-height: 200px;">
-                @else
-                    -
-                @endif
-            </div>
+            <div class="col-md-6"><strong>SEO Title:</strong> {{ $mobile->seo_title ?? '-' }}</div>
+            <div class="col-md-6"><strong>SEO Keywords:</strong> {{ $mobile->seo_keywords ?? '-' }}</div>
+            <div class="col-12"><strong>SEO Description:</strong> {{ $mobile->seo_description ?? '-' }}</div>
         </div>
     </div>
 @endsection

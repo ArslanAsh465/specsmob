@@ -21,7 +21,7 @@
     </div>
 
     <!-- Create User Form -->
-    <div class="bg-white rounded shadow p-3 mt-4">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <form action="{{ route('backend.users.store') }}" method="POST">
             @csrf
 

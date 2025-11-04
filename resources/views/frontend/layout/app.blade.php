@@ -8,7 +8,7 @@
     <!-- Title -->
     <title>
         @hasSection('title')
-            @yield('title') - STED
+            @yield('title') - SpecsMob
         @else
             STED
         @endif
@@ -34,18 +34,20 @@
     <!-- Navbar -->
     @include('frontend.layout.navbar')
 
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <aside class="sidebar bg-light p-3" style="width: 250px; min-height: 100vh;">
-            @include('frontend.layout.sidebar')
-        </aside>
+    <div class="container">
+        <div class="d-flex">
+            <!-- Sidebar: 25% width on large screens only -->
+            <aside class="bg-light p-3 d-none d-lg-block col-lg-3">
+                @include('frontend.layout.sidebar')
+            </aside>
 
-        <!-- Main Content -->
-        <main class="flex-grow-1 p-4">
-            <div class="container-fluid">
-                @yield('content')
-            </div>
-        </main>
+            <!-- Main Content: remaining width -->
+            <main class="flex-grow-1 p-4 col-12 col-lg-9">
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+            </main>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -58,16 +60,27 @@
     @yield('footer')
 
     <script>
-        // Toggle navbar visibility when hamburger icon clicked
         document.addEventListener("DOMContentLoaded", function() {
             const toggleBtn = document.getElementById('navbar-toggle');
             const navbar = document.getElementById('navbarMenu');
+            const storageKey = 'navbarVisible';
 
-            if (toggleBtn && navbar) {
-                toggleBtn.addEventListener('click', function() {
-                    navbar.classList.toggle('d-none');
-                });
+            if (!toggleBtn || !navbar) return;
+
+            const savedState = localStorage.getItem(storageKey);
+
+            if (savedState === 'visible') {
+                navbar.classList.remove('d-none');
+            } else {
+                navbar.classList.add('d-none');
             }
+
+            toggleBtn.addEventListener('click', function () {
+                navbar.classList.toggle('d-none');
+
+                const isVisible = !navbar.classList.contains('d-none');
+                localStorage.setItem(storageKey, isVisible ? 'visible' : 'hidden');
+            });
         });
     </script>
 </body>

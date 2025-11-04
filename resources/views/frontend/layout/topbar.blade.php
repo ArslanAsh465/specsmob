@@ -10,6 +10,9 @@
             <!-- Search Bar -->
             <form class="d-none d-md-flex" role="search">
                 <input class="form-control form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+                <button class="btn btn-sm btn-primary ms-2" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
             </form>
 
             <!-- Hamburger Menu -->

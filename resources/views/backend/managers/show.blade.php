@@ -29,7 +29,7 @@
     </div>
 
     <!-- Manager Details -->
-    <div class="bg-white rounded shadow p-3 mt-4">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <div class="row g-3">
             <div class="col-md-6">
                 <strong>Name:</strong> {{ $manager->name }}

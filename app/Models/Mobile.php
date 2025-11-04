@@ -10,8 +10,10 @@ class Mobile extends Model
     protected $fillable = [
         'user_id',
         'brand_id',
+
         'name',
         'slug',
+
         'versions',
 
         // Network
@@ -84,13 +86,9 @@ class Mobile extends Model
         'misc_price',
 
         // SEO
-        'meta_title',
-        'meta_keywords',
-        'meta_description',
-        'canonical_url',
-        'og_title',
-        'og_description',
-        'og_image',
+        'seo_title',
+        'seo_keywords',
+        'seo_description',
 
         // General
         'status',
@@ -128,5 +126,15 @@ class Mobile extends Model
     public function comments()
     {
         return $this->hasMany(MobileComment::class);
+    }
+
+    public function news()
+    {
+        return $this->hasOne(News::class);
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
     }
 }

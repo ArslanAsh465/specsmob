@@ -11,6 +11,7 @@ class NewsComment extends Model
         'user_id',
         'comment',
         'stars',
+        'status'
     ];
 
     public function user()

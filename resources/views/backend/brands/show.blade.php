@@ -29,7 +29,7 @@
     </div>
 
     <!-- Brand Details -->
-    <div class="shadow rounded bg-white p-3 mb-4">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <div class="row g-3">
             <div class="col-md-6">
                 <strong>Slug:</strong> {{ $brand->slug }}
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Associated Mobiles -->
-    <div class="shadow rounded bg-white p-3">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <h4 class="mb-3">Associated Mobiles ({{ $brand->mobiles->count() }})</h4>
 
         @if($brand->mobiles->isEmpty())

@@ -12,11 +12,17 @@ class BackendManagersController extends Controller
 {
     protected $data = [];
     
-    public function index()
+    public function index(Request $request)
     {
         $this->data['title'] = 'Managers';
 
-        $this->data['managers'] = User::where('role', User::ROLE_MANAGER)->get();
+        $query = User::where('role', User::ROLE_MANAGER);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $this->data['managers'] = $query->orderBy('created_at', 'desc')->paginate(20)->appends($request->all());
 
         return view('backend.managers.index', $this->data);
     }

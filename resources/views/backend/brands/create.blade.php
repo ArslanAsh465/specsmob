@@ -24,7 +24,7 @@
     </div>
 
     <!-- Create Brand Form -->
-    <div class="mt-4 shadow rounded p-3 bg-white">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <form action="{{ route('backend.brands.store') }}" method="POST">
             @csrf
 

@@ -26,8 +26,63 @@
         </div>
     </div>
 
+    <!-- Filter Card -->
+    <div class="shadow-sm rounded bg-white p-3 mt-4">
+        <form method="GET" action="{{ route('backend.mobiles.index') }}">
+            <h5>Filters</h5>
+
+            <div class="row g-3 align-items-end">
+                
+                <!-- Brand Filter -->
+                <div class="col-md-3">
+                    <label for="brand_id" class="form-label">Brand</label>
+                    <select name="brand_id" id="brand_id" class="form-select">
+                        <option value="">All Brands</option>
+                        @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- User Filter -->
+                <div class="col-md-3">
+                    <label for="user_id" class="form-label">User</label>
+                    <select name="user_id" id="user_id" class="form-select">
+                        <option value="">All Users</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-md-2">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">All</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>In-active</option>
+                    </select>
+                </div>
+
+                <!-- Search & Reset Buttons -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{{ route('backend.mobiles.index') }}" class="btn btn-secondary w-100">Reset</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
     <!-- Mobiles Table -->
-    <div class="mt-4 shadow rounded bg-white p-3">
+    <div class="shadow-sm rounded bg-white p-3 mt-4">
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -46,7 +101,7 @@
                         <tr>
                             <td>{{ $mobile->name }}</td>
                             <td class="d-none d-lg-table-cell">{{ $mobile->brand->name }}</td>
-                            <td class="d-none d-lg-table-cell">{{ $mobile->price }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $mobile->misc_price }}</td>
                             <td class="d-none d-lg-table-cell">{{ $mobile->views }}</td>
                             <td class="d-none d-lg-table-cell">{{ $mobile->comments->count() }}</td>
                             <td>
@@ -83,6 +138,10 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <div class="mt-3">
+                {{ $mobiles->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 @endsection

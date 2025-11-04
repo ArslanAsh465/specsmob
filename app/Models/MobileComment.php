@@ -11,6 +11,7 @@ class MobileComment extends Model
         'user_id',
         'comment',
         'stars',
+        'status'
     ];
 
     // Relationships

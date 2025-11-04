@@ -11,12 +11,18 @@ use App\Models\User;
 class BackendUsersController extends Controller
 {
     protected $data = [];
-    
-    public function index()
+
+    public function index(Request $request)
     {
         $this->data['title'] = 'Users';
 
-        $this->data['users'] = User::where('role', User::ROLE_USER)->get();
+        $query = User::where('role', User::ROLE_USER);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $this->data['users'] = $query->orderBy('created_at', 'desc')->paginate(20)->appends($request->all());
 
         return view('backend.users.index', $this->data);
     }

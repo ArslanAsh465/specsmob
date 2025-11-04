@@ -26,8 +26,47 @@
         </div>
     </div>
 
+    <!-- Filter Card -->
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
+        <form method="GET" action="{{ route('backend.brands.index') }}">
+            <h5>Filters</h5>
+
+            <div class="row g-3 align-items-end">
+                <!-- User Filter -->
+                <div class="col-md-4">
+                    <label for="user_id" class="form-label">Added By</label>
+                    <select name="user_id" id="user_id" class="form-select">
+                        <option value="">All Users</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{{ route('backend.brands.index') }}" class="btn btn-secondary w-100">Reset</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!-- Brands Table -->
-    <div class="bg-white rounded shadow p-3 mt-4">
+    <div class="shadow-lg rounded bg-white p-3 mt-4">
         <div class="table-responsive">
             <table class="table">
                 <thead>

@@ -14,11 +14,15 @@ return new class extends Migration
         Schema::create('mobiles', function (Blueprint $table) {
             $table->id();
 
+            // Foreign Keys
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('brand_id');
+
+            // Basic Info
             $table->string('name')->unique();
             $table->string('slug')->unique();
 
+            // Versions
             $table->text('versions')->nullable();
             
             // Network
@@ -28,6 +32,10 @@ return new class extends Migration
             $table->text('network_4g_bands')->nullable();
             $table->text('network_5g_bands')->nullable();
             $table->text('network_speed')->nullable();
+
+            // Launch
+            $table->text('launch_date')->nullable();
+            $table->text('launch_status')->nullable();
 
             // Body
             $table->text('body_dimensions')->nullable();
@@ -90,19 +98,17 @@ return new class extends Migration
             $table->text('misc_sar_eu_body')->nullable();
             $table->text('misc_price')->nullable();
 
+            // SEO
+            $table->string('seo_title')->nullable();
+            $table->string('seo_keywords')->nullable();
+            $table->text('seo_description')->nullable();
+
+            // General
             $table->boolean('status')->default(false);
+            $table->string('color')->nullable();
             $table->unsignedBigInteger('views')->default(0);
             $table->string('image')->nullable();
             $table->text('description')->nullable();
-
-            // SEO
-            $table->text('meta_title')->nullable();
-            $table->text('meta_keywords')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->text('canonical_url')->nullable();
-            $table->text('og_title')->nullable();
-            $table->text('og_description')->nullable();
-            $table->text('og_image')->nullable();
 
             $table->timestamps();
         });

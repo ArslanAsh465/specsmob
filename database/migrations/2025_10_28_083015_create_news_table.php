@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('news', function (Blueprint $table) {
             $table->id();
 
+            // Foreign Keys
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('mobile_id');
+            $table->unsignedBigInteger('mobile_id')->unique();
+
             $table->string('title')->unique();
             $table->string('slug')->unique();
             $table->string('image')->nullable();
@@ -24,13 +26,9 @@ return new class extends Migration
             $table->unsignedBigInteger('views')->default(0);
 
             // SEO
-            $table->text('meta_title')->nullable();
-            $table->text('meta_keywords')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->text('canonical_url')->nullable();
-            $table->text('og_title')->nullable();
-            $table->text('og_description')->nullable();
-            $table->text('og_image')->nullable();
+            $table->text('seo_title')->nullable();
+            $table->text('seo_keywords')->nullable();
+            $table->text('seo_description')->nullable();
 
             $table->timestamps();
         });

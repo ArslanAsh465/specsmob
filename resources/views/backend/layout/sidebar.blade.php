@@ -133,7 +133,7 @@
         <!-- Mobile Comments -->
         @if(auth()->user()->role === '1')
             <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.mobiles.comments*') ? 'active' : '' }}">
+                <a href="{{ route('backend.mobile_comments.index') }}" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.mobile_comments.*') ? 'active' : '' }}">
                     <i class="bi bi-speedometer2"></i>
                     <span class="ms-2">Mobile Comments</span>
                 </a>
@@ -143,9 +143,9 @@
         <!-- News -->
         @if(auth()->user()->role === '1')
             <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.news.*') ? 'active' : '' }}">
+                <a href="{{ route('backend.news.index') }}" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.news.*') ? 'active' : '' }}">
                     <i class="bi bi-speedometer2"></i>
-                    <span class="ms-2">Mobiles</span>
+                    <span class="ms-2">News</span>
                 </a>
             </li>
         @endif
@@ -153,7 +153,7 @@
         <!-- News Comments -->
         @if(auth()->user()->role === '1')
             <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.news.comments*') ? 'active' : '' }}">
+                <a href="{{ route('backend.news_comments.index') }}" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.news_comments.*') ? 'active' : '' }}">
                     <i class="bi bi-speedometer2"></i>
                     <span class="ms-2">News Comments</span>
                 </a>
@@ -163,7 +163,7 @@
         <!-- Reviews -->
         @if(auth()->user()->role === '1')
             <li class="nav-item">
-                <a href="" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.reviews.*') ? 'active' : '' }}">
+                <a href="{{ route('backend.reviews.index') }}" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.reviews.*') ? 'active' : '' }}">
                     <i class="bi bi-speedometer2"></i>
                     <span class="ms-2">Reviews</span>
                 </a>
@@ -173,7 +173,7 @@
         <!-- Review Comments -->
         @if(auth()->user()->role === '1')
             <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.reviews.comments*') ? 'active' : '' }}">
+                <a href="{{ route('backend.review_comments.index') }}" class="nav-link d-flex align-items-center {{ request()->routeIs('backend.review_comments.*') ? 'active' : '' }}">
                     <i class="bi bi-speedometer2"></i>
                     <span class="ms-2">Review Comments</span>
                 </a>

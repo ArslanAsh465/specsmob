@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('news_comments', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('news_id');
+            // Foreign Keys
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('news_id');
+
             $table->text('comment');
             $table->unsignedTinyInteger('stars')->default(0);
+            $table->boolean('status')->default(false);
 
             $table->timestamps();
         });

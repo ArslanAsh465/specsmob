@@ -7,16 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Mobile;
 use App\Models\Brand;
+use App\Models\User;
 
 class BackendMobilesController extends Controller
 {
     protected $data = [];
-    
-    public function index()
+
+    public function index(Request $request)
     {
         $this->data['title'] = 'Mobiles';
 
-        $this->data['mobiles'] = Mobile::with('user', 'brand', 'comments')->get();
+        // Filter's Data
+        $this->data['brands'] = Brand::whereHas('mobiles')->get();
+        $this->data['users'] = User::whereHas('mobiles')->get();
+
+        $query = Mobile::with('user', 'brand', 'comments');
+
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->brand_id);
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $this->data['mobiles'] = $query->paginate(20)->withQueryString();
 
         return view('backend.mobiles.index', $this->data);
     }
@@ -35,16 +54,21 @@ class BackendMobilesController extends Controller
         $validated = $request->validate([
             'brand_id' => 'required|exists:brands,id',
             'name' => 'required|string|unique:mobiles,name',
-            'slug' => 'nullable|string|unique:mobiles,slug',
+
+            // Versions
+            'versions' => 'nullable|string',
 
             // Network
-            'versions' => 'nullable|string',
             'network_technology' => 'nullable|string',
             'network_2g_bands' => 'nullable|string',
             'network_3g_bands' => 'nullable|string',
             'network_4g_bands' => 'nullable|string',
             'network_5g_bands' => 'nullable|string',
             'network_speed' => 'nullable|string',
+
+            // Launch
+            'launch_date' => 'nullable|string',
+            'launch_status' => 'nullable|string',
 
             // Body
             'body_dimensions' => 'nullable|string',
@@ -106,13 +130,9 @@ class BackendMobilesController extends Controller
             'misc_price' => 'nullable|string',
 
             // SEO
-            'meta_title' => 'nullable|string',
-            'meta_keywords' => 'nullable|string',
-            'meta_description' => 'nullable|string',
-            'canonical_url' => 'nullable|string',
-            'og_title' => 'nullable|string',
-            'og_description' => 'nullable|string',
-            'og_image' => 'nullable|string',
+            'seo_title' => 'nullable|string',
+            'seo_keywords' => 'nullable|string',
+            'seo_description' => 'nullable|string',
 
             // General
             'status' => 'required|in:0,1',
