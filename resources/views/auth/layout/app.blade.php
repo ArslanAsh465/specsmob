@@ -20,7 +20,9 @@
                 <div class="card shadow my-3">
                     {{-- Card Header with Company Logo --}}
                     <div class="card-header bg-white text-center border-bottom-0 pt-4 pb-2">
-                        <img src="{{ asset('app-assets/images/logo.png') }}" alt="Company Logo" class="img-fluid" style="max-height: 80px;">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('app-assets/images/logo.png') }}" alt="Company Logo" class="img-fluid" style="max-height: 80px;">
+                        </a>
                     </div>
 
                     {{-- Card Body --}}

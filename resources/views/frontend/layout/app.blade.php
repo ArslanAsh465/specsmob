@@ -8,9 +8,9 @@
     <!-- Title -->
     <title>
         @hasSection('title')
-            @yield('title') - SpecsMob
+            @yield('title')
         @else
-            STED
+            SpecsMob
         @endif
     </title>
 
@@ -28,6 +28,9 @@
 </head>
 
 <body>
+    <!-- Mobile Navbar -->
+    @include('frontend.layout.mobile-menu')
+
     <!-- Topbar -->
     @include('frontend.layout.topbar')
 
@@ -36,13 +39,11 @@
 
     <div class="container">
         <div class="d-flex">
-            <!-- Sidebar: 25% width on large screens only -->
-            <aside class="bg-light p-3 d-none d-lg-block col-lg-3">
+            <aside class="d-none d-lg-block col-lg-4">
                 @include('frontend.layout.sidebar')
             </aside>
 
-            <!-- Main Content: remaining width -->
-            <main class="flex-grow-1 p-4 col-12 col-lg-9">
+            <main class="flex-grow-1 p-4 col-12 col-lg-8">
                 <div class="container-fluid">
                     @yield('content')
                 </div>

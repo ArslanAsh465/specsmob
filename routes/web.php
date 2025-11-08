@@ -29,6 +29,15 @@ Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('cke
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/news', [HomeController::class, 'news'])->name('news');
+Route::get('/news/{slug}', [HomeController::class, 'newsShow'])->name('news.show');
+Route::get('/reviews', [HomeController::class, 'reviews'])->name('reviews');
+Route::get('/videos', [HomeController::class, 'videos'])->name('videos');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
+Route::get('/brands', [HomeController::class, 'brands'])->name('brands');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/ajax-search', [HomeController::class, 'ajaxSearch'])->name('ajax.search');
 
 // Auth Routes
 Route::get('/register', [AuthController::class, 'registerForm'])->name('registerForm');
