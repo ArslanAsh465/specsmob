@@ -7,9 +7,9 @@
     <!-- Title -->
     <title>
         @hasSection('title')
-            @yield('title') - SpecsMob
+            @yield('title')
         @else
-            STED
+            SpecsMob
         @endif
     </title>
 
