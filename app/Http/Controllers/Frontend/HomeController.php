@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Models\Brand;
 use App\Models\Mobile;
 use App\Models\Review;
 use App\Models\News;
+use App\Models\MobileComment;
+use App\Models\NewsComment;
+use App\Models\ReviewComment;
 
 class HomeController extends Controller
 {
@@ -16,33 +21,96 @@ class HomeController extends Controller
     // Home Page
     public function home()
     {
-        // Get latest 3 devices
-        $this->data['latestDevices'] = Mobile::orderBy('created_at', 'desc')->where('status', 1)->take(3)->get();
+        // Featured device (latest active device)
+        $featuredDevice = Mobile::where('status', 1)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-        // Get latest 3 reviews
-        $this->data['latestReviews'] = Review::orderBy('created_at', 'desc')->where('status', 1)->take(3)->get();
+        // Latest 3 devices excluding featured
+        $latestDevices = Mobile::where('status', 1)
+            ->when($featuredDevice, function($query) use ($featuredDevice) {
+                return $query->where('id', '!=', $featuredDevice->id);
+            })
+            ->withCount('comments')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
 
-        // Pass data array to view
-        return view('frontend.home', $this->data);
+        // Latest 3 reviews
+        $latestReviews = Review::where('status', 1)
+            ->withCount('comments')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
+        // Popular brands (assuming you want top 8 brands)
+        $brands = Brand::withCount('mobiles')
+            ->orderBy('mobiles_count', 'desc')
+            ->take(8)
+            ->get();
+
+        return view('frontend.home', [
+            'featuredDevice' => $featuredDevice,
+            'latestDevices' => $latestDevices,
+            'latestReviews' => $latestReviews,
+            'brands' => $brands,
+        ]);
     }
 
     public function news()
     {
-        $this->data['news'] = News::latest()->paginate(10);
+        $this->data['news'] = News::where('status', 'published')->latest()->paginate(10);
 
         return view('frontend.news', $this->data);
     }
 
     public function newsShow($slug)
     {
-        $this->data['newsItem'] = News::where('slug', $slug)->firstOrFail();
+        $news = News::with(['comments' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])->where('status', 'published')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $this->data['newsItem'] = $news;
+
+        $this->data['seo'] = [
+            'title' => $news->seo_title ?? $news->title,
+            'description' => $news->seo_description ?? Str::limit(strip_tags($news->content), 160),
+            'keywords' => $news->seo_keywords ?? 'news, latest news',
+            'image' => $news->image_url ?? asset('app-assets/images/default-news.png'),
+            'url' => route('news.show', $news->slug),
+        ];
 
         return view('frontend.news-show', $this->data);
     }
 
     public function reviews()
     {
-        return view('frontend.reviews');
+        $this->data['reviews'] = Review::where('status', 'published')->latest()->paginate(10);
+
+        return view('frontend.reviews', $this->data);
+    }
+
+    public function reviewShow($slug)
+    {
+        $review = Review::with(['comments' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])->where('status', 'published')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $this->data['review'] = $review;
+
+        $this->data['seo'] = [
+            'title' => $review->seo_title ?? $review->title,
+            'description' => $review->seo_description ?? Str::limit(strip_tags($review->content), 160),
+            'keywords' => $review->seo_keywords ?? 'reviews, mobile reviews',
+            'image' => $review->image_url ?? asset('app-assets/images/default-review.png'),
+            'url' => route('review.show', $review->slug),
+        ];
+
+        return view('frontend.review-show', $this->data);
     }
 
     public function videos()
@@ -57,7 +125,52 @@ class HomeController extends Controller
 
     public function brands()
     {
-        return view('frontend.brands');
+        $this->data['brands'] = Brand::with('mobiles')->where('status', 1)->get();
+        
+        return view('frontend.brands', $this->data);
+    }
+
+    public function brandShow($slug)
+    {
+        $brand = Brand::with(['mobiles' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->where('status', 1)
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $this->data['brand'] = $brand;
+
+        $this->data['seo'] = [
+            'title' => $brand->seo_title ?? $brand->name,
+            'description' => $brand->seo_description ?? Str::limit(strip_tags($brand->description ?? ''), 160),
+            'keywords' => $brand->seo_keywords ?? 'brand, mobile, phones',
+            'image' => $brand->image_url ?? asset('app-assets/images/default-brand.png'),
+            'url' => route('brand.show', $brand->slug),
+        ];
+
+        return view('frontend.brand-show', $this->data);
+    }
+
+    public function mobileShow($slug)
+    {
+        $mobile = Mobile::with(['comments' => function($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+        ->where('slug', $slug)
+        ->firstOrFail();
+
+        $this->data['mobile'] = $mobile;
+
+        $this->data['seo'] = [
+            'title' => $mobile->seo_title ?? $mobile->name,
+            'description' => $mobile->seo_description ?? Str::limit(strip_tags($mobile->description), 160),
+            'keywords' => $mobile->seo_keywords ?? 'mobile, smartphone, specs',
+            'image' => $mobile->image_url ?? asset('app-assets/images/default-mobile.png'),
+            'url' => route('mobile.show', $mobile->slug),
+        ];
+
+        return view('frontend.mobile-show', $this->data);
     }
 
     // Search Page
@@ -84,5 +197,58 @@ class HomeController extends Controller
         }
 
         return response()->json([]);
+    }
+
+    public function ajaxComment(Request $request)
+    {
+        $request->validate([
+            'comment_model' => 'required|in:mobile,news,review',
+            'mobile_id'     => 'required_if:comment_model,mobile|exists:mobiles,id',
+            'news_id'       => 'required_if:comment_model,news|exists:news,id',
+            'review_id'     => 'required_if:comment_model,review|exists:reviews,id',
+            'comment'       => 'required|string|max:1000',
+            'stars'         => 'nullable|integer|min:1|max:5',
+        ]);
+
+        $commentModel = $request->input('comment_model');
+        $commentText  = $request->input('comment');
+        $stars        = $request->input('stars', null);
+
+        switch ($commentModel) {
+            case 'mobile':
+                $comment = MobileComment::create([
+                    'user_id'   => auth()->id(),
+                    'mobile_id' => $request->input('mobile_id'),
+                    'comment'   => $commentText,
+                    'stars'     => $stars,
+                ]);
+                break;
+
+            case 'news':
+                $comment = NewsComment::create([
+                    'user_id'   => auth()->id(),
+                    'news_id' => $request->input('news_id'),
+                    'comment' => $commentText,
+                    'stars'     => $stars,
+                ]);
+                break;
+
+            case 'review':
+                $comment = ReviewComment::create([
+                    'user_id'   => auth()->id(),
+                    'review_id' => $request->input('review_id'),
+                    'comment'   => $commentText,
+                    'stars'     => $stars,
+                ]);
+                break;
+
+            default:
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid comment model',
+                ], 400);
+        }
+
+        return back();
     }
 }

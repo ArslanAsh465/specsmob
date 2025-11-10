@@ -44,7 +44,7 @@ class BackendNewsController extends Controller
     {
         $this->data['title'] = 'Add News';
 
-        $this->data['mobiles'] = Mobile::where('status', 1)->get();
+        $this->data['mobiles'] = Mobile::where('status', 1)->doesntHave('news')->get();
 
         return view('backend.news.create', $this->data);
     }
