@@ -6,13 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Title -->
-    <title>
-        @hasSection('title')
-            @yield('title')
-        @else
-            SpecsMob
-        @endif
-    </title>
+    <title>@yield('title', $seo['title'] ?? 'SpecsMob')</title>
+
+    <!-- Meta Tags -->
+    <meta name="description" content="@yield('meta_description', $seo['description'] ?? 'SpecsMob - Latest tech news, reviews, and mobile specs.')">
+    <meta name="keywords" content="@yield('meta_keywords', $seo['keywords'] ?? 'mobile, news, reviews, specs')">
+    <meta name="author" content="@yield('meta_author', 'SpecsMob')">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="@yield('og_title', $seo['title'] ?? 'SpecsMob')">
+    <meta property="og:description" content="@yield('og_description', $seo['description'] ?? 'SpecsMob - Latest tech news, reviews, and mobile specs.')">
+    <meta property="og:image" content="@yield('og_image', $seo['image'] ?? asset('app-assets/images/favicon.png'))">
+    <meta property="og:url" content="@yield('og_url', $seo['url'] ?? url()->current())">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('twitter_title', $seo['title'] ?? 'SpecsMob')">
+    <meta name="twitter:description" content="@yield('twitter_description', $seo['description'] ?? 'SpecsMob - Latest tech news, reviews, and mobile specs.')">
+    <meta name="twitter:image" content="@yield('twitter_image', $seo['image'] ?? asset('app-assets/images/favicon.png'))">
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('app-assets/images/favicon.png') }}" type="image/x-icon">
@@ -39,11 +51,11 @@
 
     <div class="container">
         <div class="d-flex">
-            <aside class="d-none d-lg-block col-lg-4">
+            <aside class="d-none d-lg-block col-lg-3">
                 @include('frontend.layout.sidebar')
             </aside>
 
-            <main class="flex-grow-1 p-4 col-12 col-lg-8">
+            <main class="flex-grow-1 p-4 col-12 col-lg-9">
                 <div class="container-fluid">
                     @yield('content')
                 </div>

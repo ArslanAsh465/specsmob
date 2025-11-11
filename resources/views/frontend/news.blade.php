@@ -1,12 +1,16 @@
 @extends('frontend.layout.app')
 
 @section('content')
-<div class="container my-4">
-    <h1 class="mb-4">News</h1>
+    <!-- Page Header Section -->
+    <div class="text-white text-center" style="background: url('{{ asset('app-assets/images/news.jpg') }}') center center / cover no-repeat; height: 200px;">
+        <div class="d-flex justify-content-center align-items-center bg-dark bg-opacity-50 w-100 h-100">
+            <h1 class="fw-bold my-0">News</h1>
+        </div>
+    </div>
 
-    @if($news->count() > 0)
-        <div class="list-group">
-
+    <!-- News Listing Section -->
+    <div class="container my-5">
+        @if($news->count() > 0)
             @php
                 $defaultImage = asset('app-assets/images/no-image.png');
             @endphp
@@ -16,43 +20,44 @@
                     $image = $item->image ? asset('storage/' . $item->image) : $defaultImage;
                 @endphp
 
-                <div class="list-group-item list-group-item-action mb-3 p-3">
-                    <div class="row g-3 align-items-center">
-                        {{-- Image --}}
-                        <div class="col-md-3 col-12">
-                            <img src="{{ $image }}" class="img-fluid rounded" alt="{{ $item->title }}" style="height: 150px; width: 100%; object-fit: cover;">
-                        </div>
+                <!-- News Card -->
+                <div class="card mb-4 shadow-sm overflow-hidden rounded-3">
+                    <a href="{{ route('news.show', $item->slug) }}" class="text-decoration-none text-dark">
+                        <div class="row g-0">
+                            <!-- Image (Left) -->
+                            <div class="col-md-6">
+                                <img src="{{ $image }}" class="img-fluid w-100 h-100" alt="{{ $item->title }}" style="object-fit: cover; height: 100%;">
+                            </div>
 
-                        {{-- Title & Info --}}
-                        <div class="col-md-9 col-12">
-                            <h5 class="mb-1">
-                                <a href="{{ route('news.show', $item->id) }}" class="text-decoration-none text-dark">
-                                    {{ $item->title }}
-                                </a>
-                            </h5>
-                            <div class="text-muted mb-2">
-                                {{ $item->created_at->format('M d, Y H:i') }}
-                                @if(property_exists($item, 'comments_count') && $item->comments_count)
-                                    | <i class="bi bi-chat-left-text me-1"></i> {{ $item->comments_count }} Comments
+                            <!-- Info (Right) -->
+                            <div class="col-md-6 d-flex flex-column justify-content-center p-4 bg-light">
+                                <!-- Meta Info -->
+                                <div class="text-muted mb-2 small">
+                                    <i class="bi bi-calendar3 me-1"></i> {{ $item->created_at->format('M d, Y') }}
+                                    @if(property_exists($item, 'comments_count') && $item->comments_count)
+                                        | <i class="bi bi-chat-left-text me-1"></i> {{ $item->comments_count }} Comments
+                                    @endif
+                                </div>
+
+                                <!-- Title -->
+                                <h4 class="fw-semibold mb-3">{{ $item->title }}</h4>
+
+                                <!-- Excerpt -->
+                                @if(!empty($item->description))
+                                    <p class="text-secondary mb-0">{{ Str::limit($item->description, 180) }}</p>
                                 @endif
                             </div>
-                            @if(!empty($item->excerpt))
-                                <p class="mb-0">{{ Str::limit($item->excerpt, 150) }}</p>
-                            @endif
                         </div>
-                    </div>
+                    </a>
                 </div>
-
             @endforeach
-        </div>
 
-        {{-- Bootstrap Pagination --}}
-        <div class="d-flex justify-content-center mt-4">
-            {{ $news->links('pagination::bootstrap-5') }}
-        </div>
-
-    @else
-        <p class="text-muted">No news found.</p>
-    @endif
-</div>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $news->links('pagination::bootstrap-5') }}
+            </div>
+        @else
+            <p class="text-muted text-center">No news found.</p>
+        @endif
+    </div>
 @endsection

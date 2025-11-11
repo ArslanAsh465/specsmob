@@ -32,12 +32,19 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/news', [HomeController::class, 'news'])->name('news');
 Route::get('/news/{slug}', [HomeController::class, 'newsShow'])->name('news.show');
 Route::get('/reviews', [HomeController::class, 'reviews'])->name('reviews');
+Route::get('/review/{slug}', [HomeController::class, 'reviewShow'])->name('review.show');
 Route::get('/videos', [HomeController::class, 'videos'])->name('videos');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
 Route::get('/brands', [HomeController::class, 'brands'])->name('brands');
+Route::get('/brand/{slug}', [HomeController::class, 'brandShow'])->name('brand.show');
+
+Route::get('/mobile/{slug}', [HomeController::class, 'mobileShow'])->name('mobile.show');
+
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/ajax-search', [HomeController::class, 'ajaxSearch'])->name('ajax.search');
+
+Route::post('/ajax-comment', [HomeController::class, 'ajaxComment'])->name('ajax.comment');
 
 // Auth Routes
 Route::get('/register', [AuthController::class, 'registerForm'])->name('registerForm');
