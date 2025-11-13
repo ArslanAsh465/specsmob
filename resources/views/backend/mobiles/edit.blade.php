@@ -106,7 +106,7 @@
                 <!-- Launch -->
                 <div class="col-12">
                     <label for="launch_date" class="form-label">Launch Date</label>
-                    <textarea name="launch_date" id="launch_date" rows="2" class="form-control @error('launch_date') is-invalid @enderror">{{ old('launch_date', $mobile->launch_date ?? '') }}</textarea>
+                    <input type="date" name="launch_date" id="launch_date" class="form-control @error('launch_date') is-invalid @enderror" value="{{ old('launch_date', isset($mobile) && $mobile->launch_date ? $mobile->launch_date->format('Y-m-d') : '') }}">
                     @error('launch_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -409,7 +409,7 @@
                 </div>
                 <div class="col-12">
                     <label for="misc_price" class="form-label">Price</label>
-                    <textarea name="misc_price" id="misc_price" rows="2" class="form-control @error('misc_price') is-invalid @enderror">{{ old('misc_price', $mobile->misc_price ?? '') }}</textarea>
+                    <input type="number" name="misc_price" id="misc_price" class="form-control @error('misc_price') is-invalid @enderror" value="{{ old('misc_price') }}" step="0.01" min="0" placeholder="Enter price">
                     @error('misc_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

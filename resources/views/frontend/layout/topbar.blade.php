@@ -22,7 +22,7 @@
                 <form class="d-none d-md-flex w-100" role="search" autocomplete="off">
                     <div class="input-group position-relative">
                         <input type="search" id="mobile-search" name="query" class="form-control py-2" placeholder="Search Mobile Phones..." aria-label="Search">
-                        <button class="btn search-btn py-2 px-3" type="submit" style="background-color: #f9a13d; color: #fff;">
+                        <button class="btn search-btn py-2 px-3 rounded-end" type="submit" style="background-color: #f9a13d; color: #fff;">
                             <i class="bi bi-search"></i>
                         </button>
                         <!-- Live search results dropdown -->
@@ -32,7 +32,7 @@
 
                 <!-- Hamburger Menu -->
                 <button id="navbar-toggle" class="btn border-0 py-2 px-3" style="background-color: #045cb4; color: #fff;">
-                    <i class="bi bi-list"></i>
+                    <i class="bi bi-list" id="navbar-icon"></i>
                 </button>
             </div>
         </div>
@@ -43,18 +43,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('mobile-search');
         const resultsContainer = document.getElementById('search-results');
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarIcon = document.getElementById('navbar-icon');
 
+        // --- Search functionality ---
         searchInput.addEventListener('keyup', function() {
             const query = this.value;
 
-            if (query.length > 0) {
+            if (query.length > 2) {
                 fetch(`/ajax-search?query=${query}`)
                     .then(response => response.json())
                     .then(data => {
                         let html = '';
                         if (data.length > 0) {
                             data.forEach(mobile => {
-                                html += `<a href="/mobile/${mobile.id}" class="list-group-item list-group-item-action">${mobile.name}</a>`;
+                                html += `<a href="/mobile/${mobile.slug}" class="list-group-item list-group-item-action">${mobile.name}</a>`;
                             });
                         } else {
                             html = '<span class="list-group-item">No results found</span>';
@@ -70,6 +73,23 @@
         document.addEventListener('click', function(e) {
             if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
                 resultsContainer.style.display = 'none';
+            }
+        });
+
+        // --- Navbar toggle icon ---
+        navbarToggle.addEventListener('click', function() {
+            // Toggle your navbar visibility here (example)
+            document.body.classList.toggle('navbar-open');
+
+            // Change icon
+            if (document.body.classList.contains('navbar-open')) {
+                // Show single line (minus icon)
+                navbarIcon.classList.remove('bi-list');
+                navbarIcon.classList.add('bi-dash');
+            } else {
+                // Show hamburger (three lines)
+                navbarIcon.classList.remove('bi-dash');
+                navbarIcon.classList.add('bi-list');
             }
         });
     });

@@ -9,7 +9,7 @@
     </div>
 
     <!-- News Listing Section -->
-    <div class="container my-5">
+    <div class="my-5">
         @if($news->count() > 0)
             @php
                 $defaultImage = asset('app-assets/images/no-image.png');

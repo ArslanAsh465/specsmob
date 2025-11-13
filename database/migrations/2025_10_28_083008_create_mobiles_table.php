@@ -34,7 +34,7 @@ return new class extends Migration
             $table->text('network_speed')->nullable();
 
             // Launch
-            $table->text('launch_date')->nullable();
+            $table->date('launch_date')->nullable();
             $table->text('launch_status')->nullable();
 
             // Body
@@ -96,7 +96,7 @@ return new class extends Migration
             $table->text('misc_sar_us_body')->nullable();
             $table->text('misc_sar_eu_head')->nullable();
             $table->text('misc_sar_eu_body')->nullable();
-            $table->text('misc_price')->nullable();
+            $table->decimal('misc_price', 10, 2);
 
             // SEO
             $table->string('seo_title')->nullable();

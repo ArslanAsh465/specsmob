@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Mobile;
 
-class SidebarLatestDevices extends Component
+class BottomBarPopularDevices extends Component
 {
     public $mobiles;
 
@@ -16,7 +16,7 @@ class SidebarLatestDevices extends Component
      */
     public function __construct()
     {
-        $this->mobiles = Mobile::where('status', 1)->latest()->take(9)->get();
+        $this->mobiles = Mobile::where('status', 1)->orderByDesc('views')->take(10)->get();
     }
 
     /**
@@ -24,6 +24,6 @@ class SidebarLatestDevices extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.sidebar-latest-devices');
+        return view('components.bottom-bar-popular-devices');
     }
 }

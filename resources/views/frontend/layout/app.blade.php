@@ -63,13 +63,16 @@
         </div>
     </div>
 
+    <!-- Mobile Navbar -->
+    @include('frontend.layout.mobile-bottom-bar')
+
     <!-- Footer -->
     @include('frontend.layout.footer')
 
     <!-- JS -->
     <script src="{{ asset('app-assets/js/bootstrap.min.js') }}"></script>
 
-    {{-- Custom footer scripts or content --}}
+    <!-- Custom footer scripts or content -->
     @yield('footer')
 
     <script>

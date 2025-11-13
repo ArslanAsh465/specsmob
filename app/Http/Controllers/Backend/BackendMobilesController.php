@@ -67,7 +67,7 @@ class BackendMobilesController extends Controller
             'network_speed' => 'nullable|string',
 
             // Launch
-            'launch_date' => 'nullable|string',
+            'launch_date' => 'nullable|date',
             'launch_status' => 'nullable|string',
 
             // Body
@@ -127,7 +127,7 @@ class BackendMobilesController extends Controller
             'misc_sar_us_body' => 'nullable|string',
             'misc_sar_eu_head' => 'nullable|string',
             'misc_sar_eu_body' => 'nullable|string',
-            'misc_price' => 'nullable|string',
+            'misc_price' => 'nullable|numeric|min:0',
 
             // SEO
             'seo_title' => 'nullable|string',
@@ -190,6 +190,10 @@ class BackendMobilesController extends Controller
             'network_5g_bands' => 'nullable|string',
             'network_speed' => 'nullable|string',
 
+            // Launch
+            'launch_date' => 'nullable|date',
+            'launch_status' => 'nullable|string',
+
             // Body
             'body_dimensions' => 'nullable|string',
             'body_weight' => 'nullable|string',
@@ -247,7 +251,7 @@ class BackendMobilesController extends Controller
             'misc_sar_us_body' => 'nullable|string',
             'misc_sar_eu_head' => 'nullable|string',
             'misc_sar_eu_body' => 'nullable|string',
-            'misc_price' => 'nullable|string',
+            'misc_price' => 'nullable|numeric|min:0',
 
             // SEO
             'meta_title' => 'nullable|string',

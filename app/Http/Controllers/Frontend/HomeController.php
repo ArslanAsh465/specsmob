@@ -21,40 +21,25 @@ class HomeController extends Controller
     // Home Page
     public function home()
     {
-        // Featured device (latest active device)
-        $featuredDevice = Mobile::where('status', 1)
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        // Latest 3 devices excluding featured
-        $latestDevices = Mobile::where('status', 1)
-            ->when($featuredDevice, function($query) use ($featuredDevice) {
-                return $query->where('id', '!=', $featuredDevice->id);
-            })
-            ->withCount('comments')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
         // Latest 3 reviews
-        $latestReviews = Review::where('status', 1)
-            ->withCount('comments')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+        $latestReviews = Review::where('status', 'published')->withCount('comments')->orderBy('created_at', 'desc')->take(3)->get();
+        $this->data['latestReviews'] = $latestReviews;
 
-        // Popular brands (assuming you want top 8 brands)
-        $brands = Brand::withCount('mobiles')
-            ->orderBy('mobiles_count', 'desc')
-            ->take(8)
-            ->get();
+        // Latest 3 news
+        $latestNews = News::where('status', 'published')->withCount('comments')->orderBy('created_at', 'desc')->take(3)->get();
+        $this->data['latestNews'] = $latestNews;
 
-        return view('frontend.home', [
-            'featuredDevice' => $featuredDevice,
-            'latestDevices' => $latestDevices,
-            'latestReviews' => $latestReviews,
-            'brands' => $brands,
-        ]);
+        // IDs to exclude (latest 3)
+        $excludeReviewIds = $latestReviews->pluck('id')->toArray();
+        $excludeNewsIds = $latestNews->pluck('id')->toArray();
+
+        // Top 10 reviews excluding latest 3
+        $this->data['topReviews'] = Review::where('status', 1)->whereNotIn('id', $excludeReviewIds)->withCount('comments')->orderBy('views', 'desc')->take(10)->get();
+
+        // Top 10 news excluding latest 3
+        $this->data['topNews'] = News::where('status', 1)->whereNotIn('id', $excludeNewsIds)->withCount('comments')->orderBy('views', 'desc')->take(10)->get();
+
+        return view('frontend.home', $this->data);
     }
 
     public function news()
@@ -156,7 +141,7 @@ class HomeController extends Controller
     {
         $mobile = Mobile::with(['comments' => function($query) {
             $query->orderBy('created_at', 'desc');
-        }])
+        }], 'review', 'news')
         ->where('slug', $slug)
         ->firstOrFail();
 
@@ -171,6 +156,21 @@ class HomeController extends Controller
         ];
 
         return view('frontend.mobile-show', $this->data);
+    }
+
+    // Phone Finder
+    public function phoneFinder()
+    {
+        $this->data['brands'] = Brand::all();
+
+        return view('frontend.phone-finder', $this->data);
+    }
+
+    public function phoneFinderResults(Request $request)
+    {
+        $this->data['mobiles'] = Mobile::all();
+
+        return view('frontend.phone-finder-results', $this->data);
     }
 
     // Search Page

@@ -5,9 +5,9 @@
 
     <!-- 🟧 Google Ads Placeholder -->
     <li class="nav-item mb-3">
-        <div class="border rounded overflow-hidden w-100" style="background-color: #f8f9fa;">
+        <div class="overflow-hidden w-100" style="background-color: #f8f9fa;">
             <!-- Header -->
-            <div class="fw-bold text-white py-2 text-center" style="background-color: #f9a13d;">
+            <div class="fw-bold text-white py-2 text-center" style="background-color: #045CB4;">
                 Advertisement
             </div>
 
@@ -32,9 +32,9 @@
 
     <!-- 🟧 Google Ads Placeholder -->
     <li class="nav-item mb-3">
-        <div class="border rounded overflow-hidden w-100" style="background-color: #f8f9fa;">
+        <div class="overflow-hidden w-100" style="background-color: #f8f9fa;">
             <!-- Header -->
-            <div class="fw-bold text-white py-2 text-center" style="background-color: #f9a13d;">
+            <div class="fw-bold text-white py-2 text-center" style="background-color: #045CB4;">
                 Advertisement
             </div>
 

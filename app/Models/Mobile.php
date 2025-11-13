@@ -137,4 +137,9 @@ class Mobile extends Model
     {
         return $this->hasOne(Review::class);
     }
+
+    public function video()
+    {
+        return $this->hasOne(Video::class);
+    }
 }

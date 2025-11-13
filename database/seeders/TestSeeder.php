@@ -16,6 +16,7 @@ use App\Models\News;
 use App\Models\NewsComment;
 use App\Models\Review;
 use App\Models\ReviewComment;
+use App\Models\Video;
 
 class TestSeeder extends Seeder
 {
@@ -107,7 +108,7 @@ class TestSeeder extends Seeder
                 'user_id'    => $faker->randomElement($users),
                 'name'       => $brand['name'],
                 'slug'       => $brand['slug'],
-                'status'     => $faker->boolean,
+                'status'     => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -325,6 +326,46 @@ class TestSeeder extends Seeder
                     'updated_at'=> now(),
                 ]);
             }
+        }
+
+        // Create Videos
+        $users = User::where('status', 1)->pluck('id')->toArray();
+        $mobiles = Mobile::where('status', 1)->pluck('id')->toArray();
+
+        $videoLinks = [
+            'https://www.youtube.com/watch?v=V8xq7tQ5o0o', // iPhone 15 Pro Review - MKBHD
+            'https://www.youtube.com/watch?v=H0TfxIVzC0o', // Samsung Galaxy S24 Ultra Review - Mrwhosetheboss
+            'https://www.youtube.com/watch?v=9l1wVQ0T8uI', // Google Pixel 8 Review - The Verge
+            'https://www.youtube.com/watch?v=Q0hSgX0nG3A', // OnePlus 12 Review - TechDroider
+            'https://www.youtube.com/watch?v=G8wC8Zj8Z9A', // Xiaomi 14 Pro Hands-On - GSMArena
+            'https://www.youtube.com/watch?v=VbOjRKE1jCQ', // Nothing Phone 2 Review - Marques Brownlee
+            'https://www.youtube.com/watch?v=I1zqz7xkE2A', // Vivo X100 Pro Review - Tech Spurt
+            'https://www.youtube.com/watch?v=h1rY1E5wC_c', // Oppo Find X7 Pro Review - Android Authority
+            'https://www.youtube.com/watch?v=2oWnT5sMQcA', // Realme GT 5 Review - Dave Lee
+            'https://www.youtube.com/watch?v=5K7m7Y0jPjE', // Asus ROG Phone 8 Review - GSMArena
+            'https://www.youtube.com/watch?v=6Y7K8Z1dMj4', // Honor Magic 6 Pro Hands-On
+            'https://www.youtube.com/watch?v=fJ3Vh2fWyoE', // Huawei Mate 60 Pro Review
+            'https://www.youtube.com/watch?v=Em9dFJ6rCjs', // Sony Xperia 1 V Review
+            'https://www.youtube.com/watch?v=U3RcT3xF1Zs', // Nokia X30 Review
+            'https://www.youtube.com/watch?v=FJmYv6Y0V8U', // Infinix Zero 30 Review
+            'https://www.youtube.com/watch?v=T4JtKhV4u8M', // Tecno Phantom V Flip Review
+            'https://www.youtube.com/watch?v=gfLkZnHfT-U', // Motorola Edge 50 Ultra Review
+            'https://www.youtube.com/watch?v=yF9v9d8ZpRE', // Lenovo Legion Phone Duel Review
+            'https://www.youtube.com/watch?v=mvE6bULaRdo', // ZTE Nubia RedMagic 9 Pro Review
+            'https://www.youtube.com/watch?v=dM9iCz2o0Bc', // Meizu 20 Infinity Review
+        ];
+
+        foreach ($mobiles as $index => $mobileId) {
+            $link = $videoLinks[$index % count($videoLinks)];
+
+            Video::create([
+                'user_id'   => $faker->randomElement($users),
+                'mobile_id' => $mobileId,
+                'link'      => $link,
+                'status'    => $faker->boolean(80),
+                'created_at'=> now(),
+                'updated_at'=> now(),
+            ]);
         }
     }
 }

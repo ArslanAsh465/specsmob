@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// CKEditor Controller
-use App\Http\Controllers\CKEditorController;
-
 // Frontend Controller
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -24,8 +21,8 @@ use App\Http\Controllers\Backend\BackendNewsCommentsController;
 use App\Http\Controllers\Backend\BackendReviewsController;
 use App\Http\Controllers\Backend\BackendReviewCommentsController;
 
-// CKEditor Image upload route
-Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
+// CKEditor Controller
+use App\Http\Controllers\CKEditorController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -41,9 +38,13 @@ Route::get('/brand/{slug}', [HomeController::class, 'brandShow'])->name('brand.s
 
 Route::get('/mobile/{slug}', [HomeController::class, 'mobileShow'])->name('mobile.show');
 
-Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/search', [HomeController::class, 'index'])->name('search');
 Route::get('/ajax-search', [HomeController::class, 'ajaxSearch'])->name('ajax.search');
 
+Route::get('/phone-finder', [HomeController::class, 'phoneFinder'])->name('phone.finder');
+Route::post('/phone-finder-results', [HomeController::class, 'phoneFinderResults'])->name('phone.finder.results');
+
+Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
 Route::post('/ajax-comment', [HomeController::class, 'ajaxComment'])->name('ajax.comment');
 
 // Auth Routes
@@ -88,3 +89,6 @@ Route::middleware(['auth'])->prefix('backend')->name('backend.')->group(function
     // Review Comments
     Route::resource('review-comments', BackendReviewCommentsController::class)->names('review_comments')->only(['index', 'show', 'destroy']);
 });
+
+// CKEditor Image upload route
+Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');

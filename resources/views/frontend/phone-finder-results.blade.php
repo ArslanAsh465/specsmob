@@ -6,9 +6,9 @@
     @endphp
 
     <div class="m-0 p-0">
-        @if ($brand->mobiles->count() > 0)
+        @if ($mobiles->count() > 0)
             <div class="row g-3">
-                @foreach ($brand->mobiles as $mobile)
+                @foreach ($mobiles as $mobile)
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <a href="{{ route('mobile.show', $mobile->slug) }}" class="text-decoration-none text-dark">
                             <div class="bg-white rounded shadow-sm h-100">

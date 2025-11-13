@@ -9,7 +9,7 @@
     </div>
 
     <!-- Reviews Listing Section -->
-    <div class="container my-5">
+    <div class="my-5">
         @if($reviews->count() > 0)
             @php
                 $defaultImage = asset('app-assets/images/no-image.png');
