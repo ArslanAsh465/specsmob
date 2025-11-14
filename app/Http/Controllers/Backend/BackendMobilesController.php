@@ -68,7 +68,7 @@ class BackendMobilesController extends Controller
 
             // Launch
             'launch_date' => 'nullable|date',
-            'launch_status' => 'nullable|string',
+            'launch_status' => 'nullable|in:Available,Coming soon,Discontinued',
 
             // Body
             'body_dimensions' => 'nullable|string',
@@ -192,7 +192,7 @@ class BackendMobilesController extends Controller
 
             // Launch
             'launch_date' => 'nullable|date',
-            'launch_status' => 'nullable|string',
+            'launch_status' => 'nullable|in:Available,Coming soon,Discontinued',
 
             // Body
             'body_dimensions' => 'nullable|string',

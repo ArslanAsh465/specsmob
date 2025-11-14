@@ -140,7 +140,7 @@ class TestSeeder extends Seeder
                 'network_speed'         => $faker->randomElement(['HSPA 42.2/5.76 Mbps', 'LTE-A', '5G']),
 
                 // Launch
-                'launch_date'   => $faker->date('F Y'),
+                'launch_date' => $faker->date('Y-m-d', 'now'),
                 'launch_status' => $faker->randomElement(['Available', 'Coming soon', 'Discontinued']),
 
                 // Body

@@ -57,7 +57,7 @@
                         @endforeach
                     </div>
                 @else
-                    <p>No latest reviews available.</p>
+                    <p class="text-center">No latest reviews available.</p>
                 @endif
             </div>
         </div>
@@ -114,7 +114,7 @@
                         @endforeach
                     </div>
                 @else
-                    <p>No latest news available.</p>
+                    <p class="text-center">No latest news available.</p>
                 @endif
             </div>
         </div>

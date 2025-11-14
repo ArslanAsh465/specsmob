@@ -24,6 +24,10 @@ class Mobile extends Model
         'network_5g_bands',
         'network_speed',
 
+        // Launch
+        'launch_date',
+        'launch_status',
+
         // Body
         'body_dimensions',
         'body_weight',

@@ -112,7 +112,13 @@
                 </div>
                 <div class="col-12">
                     <label for="launch_status" class="form-label">Launch Status</label>
-                    <textarea name="launch_status" id="launch_status" rows="2" class="form-control @error('launch_status') is-invalid @enderror">{{ old('launch_status') }}</textarea>
+                    <select name="launch_status" id="launch_status" class="form-control @error('launch_status') is-invalid @enderror">
+                        <option value="" selected disabled>Select status</option>
+                        <option value="Available" {{ old('launch_status') == 'Available' ? 'selected' : '' }}>Available</option>
+                        <option value="Coming soon" {{ old('launch_status') == 'Coming soon' ? 'selected' : '' }}>Coming soon</option>
+                        <option value="Discontinued" {{ old('launch_status') == 'Discontinued' ? 'selected' : '' }}>Discontinued</option>
+                    </select>
+
                     @error('launch_status')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

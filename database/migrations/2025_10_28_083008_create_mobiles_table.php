@@ -35,7 +35,7 @@ return new class extends Migration
 
             // Launch
             $table->date('launch_date')->nullable();
-            $table->text('launch_status')->nullable();
+            $table->enum('launch_status', ['Available', 'Coming soon', 'Discontinued'])->nullable();
 
             // Body
             $table->text('body_dimensions')->nullable();
