@@ -8,12 +8,20 @@ use Illuminate\Support\Str;
 class Mobile extends Model
 {
     protected $fillable = [
+        // Foreign Keys
         'user_id',
         'brand_id',
 
+        // Basic Info
         'name',
         'slug',
+        'status',
+        'blog_color',
+        'views',
+        'image',
+        'description',
 
+        // Versions
         'versions',
 
         // Network
@@ -33,52 +41,79 @@ class Mobile extends Model
         'body_weight',
         'body_build',
         'body_sim',
+        'body_dual_sim',
+        'body_e_sim',
+        'body_sim_size',
 
         // Display
+        'display_type_detail',
         'display_type',
         'display_size',
+        'display_resolution_detail',
         'display_resolution',
+        'display_refresh_rate',
         'display_protection',
 
         // Platform
         'platform_os',
+        'platform_os_detail',
         'platform_chipset',
+        'platform_chipset_detail',
         'platform_cpu',
+        'platform_cpu_core',
         'platform_gpu',
 
         // Memory
-        'memory_card_slot',
         'memory_internal',
+        'memory_internal_value',
+        'memory_internal_unit',
+        'memory_ram_value',
+        'memory_ram_unit',
+        'memory_card_slot',
 
         // Main Camera
-        'main_camera_setup',
+        'main_camera_name',
+        'main_camera_pixel',
+        'main_camera_ultra_wide',
+        'main_camera_flash',
+        'main_camera_detail',
         'main_camera_features',
         'main_camera_video',
 
         // Selfie Camera
-        'selfie_camera_setup',
+        'selfie_camera_name',
+        'selfie_camera_pixel',
+        'selfie_camera_flash',
+        'selfie_camera_detail',
         'selfie_camera_features',
         'selfie_camera_video',
 
         // Sound
         'sound_loudspeaker',
+        'sound_loudspeaker_detail',
+        'sound_dual_speaker',
         'sound_jack_3_5mm',
 
         // Communications
         'comms_wlan',
         'comms_bluetooth',
-        'comms_positioning',
+        'comms_gps',
         'comms_nfc',
         'comms_radio',
         'comms_usb',
 
         // Features
         'features_sensors',
+        'features_sensors_details',
         'features_extra',
 
         // Battery
-        'battery_type',
-        'battery_charging',
+        'battery_detail',
+        'battery_capacity',
+        'battery_wireless',
+        'battery_removeable',
+        'battery_fast_speed',
+        'battery_charging_speed',
 
         // Misc
         'misc_colors',
@@ -93,12 +128,6 @@ class Mobile extends Model
         'seo_title',
         'seo_keywords',
         'seo_description',
-
-        // General
-        'status',
-        'views',
-        'image',
-        'description',
     ];
 
     protected $casts = [

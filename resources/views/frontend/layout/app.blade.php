@@ -35,7 +35,7 @@
     <!-- Bootstrap Icons CSS -->
     <link href="{{ asset('app-assets/css/bootstrap-icons.min.css') }}" rel="stylesheet">
 
-    {{-- Custom header section for child views --}}
+    <!-- Custom header section for child views -->
     @yield('header')
 </head>
 

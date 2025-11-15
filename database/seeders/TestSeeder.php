@@ -117,103 +117,138 @@ class TestSeeder extends Seeder
         // Create Mobiles
         $users = User::whereIn('role', [User::ROLE_ADMIN, User::ROLE_MANAGER])->pluck('id')->toArray();
         $brands = Brand::where('status', 1)->pluck('id')->toArray();
-        $colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FFA500', '#800080', '#00FFFF', '#FFC0CB', '#A52A2A', '#808080'];
+        $colors = ['black', 'white', 'silver', 'gray', 'gold', 'rose_gold', 'blue', 'navy', 'green', 'red', 'purple', 'orange', 'yellow', 'pink', 'bronze', 'titanium', 'graphite', 'other'];
+        $osList = ['android', 'ios', 'kaios', 'windows phone', 'symbian', 'rim', 'bada', 'firefox', 'other'];
+        $chipsets = ['Snapdragon', 'Apple A Series', 'Apple M Series', 'MediaTek Dimensity', 'MediaTek Helio', 'Exynos', 'Kirin', 'Google Tensor', 'Intel Atom', 'NVIDIA Tegra', 'Other'];
+        $cores = ['Single-core', 'Dual-core', 'Triple-core', 'Quad-core', 'Hexa-core', 'Octa-core', 'Deca-core', 'Other'];
 
         for ($i = 0; $i < 30; $i++) {
-            $name = $faker->word . ' ' . $faker->bothify('##??');
+            // Pick random user and brand from DB
+            $userId = $faker->randomElement($users);
+            $brandId = $faker->randomElement($brands);
+
+            // Generate name based on brand (optional, more realistic)
+            $brand = Brand::find($brandId);
+            $name = $brand->name . ' ' . $faker->bothify('##??');
 
             Mobile::create([
-                'user_id'               => $faker->randomElement($users),
-                'brand_id'              => $faker->randomElement($brands),
+                // Foreign Keys
+                'user_id'               => $userId,
+                'brand_id'              => $brandId,
+
+                // Basic Info
                 'name'                  => $name,
                 'slug'                  => Str::slug($name),
-
-                // Versions
-                'versions'   => $faker->sentence(3),
+                'status'                => $faker->boolean,
+                'blog_color'            => $faker->hexColor(),
+                'views'                 => $faker->numberBetween(1000, 100000),
+                'image'                 => null,
+                'description'           => $faker->paragraph,
+                'versions'              => $faker->words(3, true),
 
                 // Network
-                'network_technology'    => $faker->randomElement(['GSM / CDMA / HSPA / LTE / 5G']),
-                'network_2g_bands'      => $faker->word,
-                'network_3g_bands'      => $faker->word,
-                'network_4g_bands'      => $faker->word,
-                'network_5g_bands'      => $faker->word,
-                'network_speed'         => $faker->randomElement(['HSPA 42.2/5.76 Mbps', 'LTE-A', '5G']),
+                'network_technology'    => 'GSM / HSPA / LTE / 5G',
+                'network_2g_bands'      => 'GSM 850 / 900 / 1800 / 1900',
+                'network_3g_bands'      => 'HSDPA 850 / 900 / 1900 / 2100',
+                'network_4g_bands'      => 'LTE bands 1, 2, 3, 4, 5, 7',
+                'network_5g_bands'      => '5G n1, n3, n41, n78',
+                'network_speed'         => $faker->randomElement(['HSPA', 'LTE-A', '5G']),
 
                 // Launch
-                'launch_date' => $faker->date('Y-m-d', 'now'),
-                'launch_status' => $faker->randomElement(['Available', 'Coming soon', 'Discontinued']),
+                'launch_date'           => $faker->dateTimeBetween('-5 years', '-1 day')->format('Y-m-d'),
+                'launch_status'         => $faker->randomElement(['Available', 'Coming soon', 'Discontinued']),
 
                 // Body
-                'body_dimensions'       => $faker->randomElement(['146.7 x 71.5 x 7.4 mm', '160 x 75 x 8 mm']),
-                'body_weight'           => $faker->randomElement(['174 g', '190 g']),
-                'body_build'            => $faker->word,
+                'body_dimensions'       => $faker->randomElement(['146 x 71 x 7 mm', '160 x 75 x 8 mm']),
+                'body_weight'           => $faker->randomFloat(2, 150, 220),
+                'body_build'            => $faker->randomElement(['Glass front', 'Plastic body', 'Aluminum frame']),
                 'body_sim'              => $faker->randomElement(['Single SIM', 'Dual SIM']),
+                'body_dual_sim'         => $faker->boolean,
+                'body_e_sim'            => $faker->boolean,
+                'body_sim_size'         => $faker->randomElement(['Mini-SIM', 'Micro-SIM', 'Nano-SIM']),
 
                 // Display
-                'display_type'          => $faker->randomElement(['Super AMOLED', 'LCD', 'OLED']),
-                'display_size'          => $faker->randomElement(['6.1 inches', '6.5 inches']),
-                'display_resolution'    => $faker->randomElement(['1080 x 2400 pixels', '1170 x 2532 pixels']),
-                'display_protection'    => $faker->word,
+                'display_type_detail'   => $faker->words(5, true),
+                'display_type'          => $faker->randomElement(['Super AMOLED', 'OLED', 'LCD']),
+                'display_size'          => $faker->randomFloat(2, 5.0, 7.0),
+                'display_resolution_detail'   => $faker->words(5, true),
+                'display_resolution'    => $faker->randomElement(['HD', 'HD+', 'Full HD', 'Full HD+', 'Quad HD', 'Quad HD+']),
+                'display_refresh_rate'  => $faker->randomElement(['60Hz', '90Hz', '120Hz']),
+                'display_protection'    => $faker->randomElement(['Gorilla Glass 5', 'Gorilla Glass Victus', null]),
 
                 // Platform
-                'platform_os'           => $faker->randomElement(['Android 13', 'iOS 17']),
-                'platform_chipset'      => $faker->randomElement(['Snapdragon 8 Gen 3', 'Apple A17 Bionic']),
+                'platform_os'           => $faker->randomElement($osList),
+                'platform_os_detail'    => $faker->words(5, true),
+                'platform_chipset'      => $faker->randomElement($chipsets),
+                'platform_chipset_detail'=> $faker->words(5, true),
                 'platform_cpu'          => $faker->word,
-                'platform_gpu'          => $faker->word,
+                'platform_cpu_core'     => $faker->randomElement($cores),
+                'platform_gpu'          => $faker->randomElement(['Adreno', 'Apple GPU', 'Mali', 'Other']),
 
                 // Memory
-                'memory_card_slot'      => $faker->word,
-                'memory_internal'       => $faker->randomElement(['64 GB', '128 GB', '256 GB']),
+                'memory_internal'       => $faker->randomElement(['32 GB', '64 GB', '128 GB', '256 GB']),
+                'memory_internal_value' => $faker->randomElement([32, 64, 128, 256]),
+                'memory_internal_unit'  => 'GB',
+                'memory_ram_value'      => $faker->randomElement([2, 4, 6, 8, 12]),
+                'memory_ram_unit'       => 'GB',
+                'memory_card_slot'      => $faker->boolean,
 
-                // Main Camera
-                'main_camera_setup'     => $faker->randomElement(['12 MP + 12 MP', '108 MP + 12 MP']),
-                'main_camera_features'  => $faker->sentence(3),
-                'main_camera_video'     => $faker->word,
+                // Cameras
+                'main_camera_name'      => $faker->word,
+                'main_camera_pixel'     => $faker->numberBetween(12, 108),
+                'main_camera_ultra_wide'=> $faker->boolean,
+                'main_camera_flash'     => $faker->boolean,
+                'main_camera_detail'    => $faker->sentence(5),
+                'main_camera_features'  => $faker->sentence(5),
+                'main_camera_video'     => $faker->sentence(5),
 
-                // Selfie Camera
-                'selfie_camera_setup'   => $faker->randomElement(['8 MP', '12 MP']),
-                'selfie_camera_features'=> $faker->sentence(2),
-                'selfie_camera_video'   => $faker->word,
+                'selfie_camera_name'    => $faker->word,
+                'selfie_camera_pixel'   => $faker->numberBetween(5, 40),
+                'selfie_camera_flash'   => $faker->boolean,
+                'selfie_camera_detail'  => $faker->sentence(5),
+                'selfie_camera_features'=> $faker->sentence(5),
+                'selfie_camera_video'   => $faker->sentence(5),
 
                 // Sound
-                'sound_loudspeaker'     => $faker->word,
-                'sound_jack_3_5mm'      => $faker->randomElement(['Yes', 'No']),
+                'sound_loudspeaker'     => $faker->boolean,
+                'sound_loudspeaker_detail'=> $faker->sentence(2),
+                'sound_dual_speaker'    => $faker->boolean,
+                'sound_jack_3_5mm'      => $faker->boolean,
 
                 // Communications
-                'comms_wlan'            => $faker->word,
-                'comms_bluetooth'       => $faker->word,
-                'comms_positioning'     => $faker->word,
-                'comms_nfc'             => $faker->word,
-                'comms_radio'           => $faker->word,
-                'comms_usb'             => $faker->word,
+                'comms_wlan'            => $faker->randomElement(['wifi_80211_n', 'wifi_80211_ac', 'wifi_80211_ax']),
+                'comms_bluetooth'       => $faker->randomElement(['bluetooth_4_2', 'bluetooth_5', 'bluetooth_5_2']),
+                'comms_gps'             => $faker->boolean,
+                'comms_nfc'             => $faker->boolean,
+                'comms_radio'           => $faker->boolean,
+                'comms_usb'             => $faker->randomElement(['usb_c', 'micro_usb', 'other']),
 
                 // Features
-                'features_sensors'      => $faker->word,
-                'features_extra'        => $faker->sentence(2),
+                'features_sensors'      => $faker->randomElement(['accelerometer', 'gyroscope', 'fingerprint', 'face_id']),
+                'features_sensors_details'=> $faker->sentence(5),
+                'features_extra'        => $faker->sentence(5),
 
                 // Battery
-                'battery_type'          => $faker->randomElement(['Li-Ion 4000 mAh', 'Li-Po 5000 mAh']),
-                'battery_charging'      => $faker->randomElement(['Fast charging 33W', 'Wireless charging']),
+                'battery_detail'        => $faker->sentence(3),
+                'battery_capacity'      => $faker->numberBetween(1500, 6000),
+                'battery_wireless'      => $faker->boolean,
+                'battery_removeable'    => $faker->boolean,
+                'battery_fast_speed'    => $faker->boolean,
+                'battery_charging_speed'=> $faker->randomElement([18, 25, 33, 45, 65]),
 
                 // Misc
-                'misc_colors'           => $faker->randomElement(['Black, White', 'Blue, Red']),
-                'misc_models'           => $faker->bothify('??###'),
+                'misc_colors'           => $faker->randomElement($colors),
+                'misc_models'           => strtoupper($faker->bothify('??###')),
                 'misc_sar_us_head'      => $faker->randomFloat(2, 0.1, 2),
                 'misc_sar_us_body'      => $faker->randomFloat(2, 0.1, 2),
                 'misc_sar_eu_head'      => $faker->randomFloat(2, 0.1, 2),
                 'misc_sar_eu_body'      => $faker->randomFloat(2, 0.1, 2),
-                'misc_price'            => $faker->randomFloat(2, 100, 1500),
+                'misc_price'            => $faker->randomFloat(2, 100, 2000),
 
                 // SEO
-                'seo_title'        => $faker->sentence(3),
-                'seo_keywords'     => implode(', ', $faker->words(5)),
-                'seo_description'  => $faker->sentence(10),
-
-                // General
-                'status'                => $faker->boolean,
-                'color'                 => $faker->randomElement($colors),
-                'views'                 => $faker->numberBetween(10000, 99999),
-                'description'           => $faker->paragraph,
+                'seo_title'             => $faker->sentence(5),
+                'seo_keywords'          => implode(', ', $faker->words(10)),
+                'seo_description'       => $faker->sentence(10),
 
                 'created_at'            => now(),
                 'updated_at'            => now(),

@@ -66,11 +66,7 @@
 
                 <!-- Body -->
                 <div class="col-12">
-                    <label for="body" class="form-label">Content</label>
-                    <textarea name="body" id="body" class="form-control" rows="6">{{ old('body', $review->body) }}</textarea>
-                    @error('body')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    @include('backend.layout.ckeditor', ['name' => 'body', 'label' => 'Content', 'value' => old('body', $review->body)])
                 </div>
 
                 <!-- SEO -->
@@ -116,32 +112,4 @@
             </div>
         </form>
     </div>
-@endsection
-
-@section('footer')
-    <script src="{{ asset('app-assets/js/ckeditor.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            ClassicEditor
-                .create(document.querySelector('#body'), {
-                    ckfinder: {
-                        uploadUrl: "{{ route('ckeditor.upload').'?_token='.csrf_token() }}"
-                    }
-                })
-                .then(editor => {
-                    const editableElement = editor.ui.view.editable.element;
-                    editableElement.style.minHeight = '200px';
-
-                    const form = editor.sourceElement.form;
-                    if (form) {
-                        form.addEventListener('submit', e => {
-                            document.querySelector('#body').value = editor.getData();
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
 @endsection

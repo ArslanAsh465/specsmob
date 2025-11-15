@@ -468,11 +468,7 @@
                     @enderror
                 </div>
                 <div class="col-12">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea name="description" id="description" class="form-control" rows="4">{{ old('description') }}</textarea>
-                    @error('description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    @include('backend.layout.ckeditor', ['name' => 'body', 'label' => 'Content', 'value' => old('body')])
                 </div>
 
                 <!-- Submit Button -->
@@ -482,32 +478,4 @@
             </div>
         </form>
     </div>
-@endsection
-
-@section('footer')
-    <script src="{{ asset('app-assets/js/ckeditor.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            ClassicEditor
-                .create(document.querySelector('#description'), {
-                    ckfinder: {
-                        uploadUrl: "{{ route('ckeditor.upload').'?_token='.csrf_token() }}"
-                    }
-                })
-                .then(editor => {
-                    const editableElement = editor.ui.view.editable.element;
-                    editableElement.style.minHeight = '150px';
-
-                    const form = editor.sourceElement.form;
-                    if (form) {
-                        form.addEventListener('submit', e => {
-                            document.querySelector('#description').value = editor.getData();
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
 @endsection
